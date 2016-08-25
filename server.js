@@ -22,12 +22,12 @@ io.on('connection', function (socket) {
     var user_id = Math.random();
     var username = null;
     socket.emit('client_setup', {id: user_id, users: connected_users, goblins: goblins_caught, goblin_x: goblin_x, goblin_y: goblin_y});
-    connected_users[user_id] = {x: 256, y: 240};
-    io.sockets.emit('hero_update', {id: user_id, x: 256, y: 240});
     console.log("User connected to server");
     socket.on('set_username', function(data){
         console.log(user_id + "'s username set to " + data);
-        connected_users[user_id].username = data;
+        username = data;
+        connected_users[user_id] = {username: data, x: 256, y: 240};
+        io.sockets.emit('hero_update', {id: user_id, username: username, x: 256, y: 240});
     });
     socket.on('update_hero', function(data){
         console.log("Recieved a hero update");
