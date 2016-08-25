@@ -147,7 +147,7 @@ var render = function () {
             ctx.drawImage(heroImage, other_heroes[other_hero].x, other_heroes[other_hero].y);
             ctx.font = "10px Helvetica";
             var text_width = ctx.measureText(other_heroes[other_hero].username);
-            console.log(text_width);
+            console.log(text_width.width);
             var box_minus_text = parseInt((32 - text_width)/2);
             console.log(box_minus_text); 
             ctx.fillText(other_heroes[other_hero].username, other_heroes[other_hero].x - box_minus_text, other_heroes[other_hero].y - 20);
