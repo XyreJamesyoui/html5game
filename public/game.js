@@ -146,6 +146,9 @@ var render = function () {
             console.log("Drawing hero " + other_hero + " at " + other_heroes[other_hero].x + " " + other_heroes[other_hero].y);
             ctx.drawImage(heroImage, other_heroes[other_hero].x, other_heroes[other_hero].y);
             ctx.font = "10px Helvetica";
+            var username_length = other_heroes[other_hero].username.length;
+            var username_pixel_length = username_length * 10;
+            console.log(document.getElementById("text").clientWidth;)
             ctx.fillText(other_heroes[other_hero].username, other_heroes[other_hero].x, other_heroes[other_hero].y - 20);
             ctx.font = "24px Helvetica";
             ctx.fillText("Users: " + other_heroes[other_hero].username, 32, 32 * (i+1));
