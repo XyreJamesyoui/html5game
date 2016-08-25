@@ -13,11 +13,14 @@ server.listen(port, function () {
 app.use(express.static(__dirname + '/public')); 
 
 var connected_users = {};
+var goblins_caught = 0;
+var goblin_x = 32 + (Math.random() * (canvas.width - 64));
+var goblin_y = 32 + (Math.random() * (canvas.height - 64));
 
 // Socket.io
 io.on('connection', function (socket) {
     var user_id = Math.random();
-    socket.emit('client_setup', {id: user_id, users: connected_users});
+    socket.emit('client_setup', {id: user_id, users: connected_users, goblins: goblins_caught, goblin_x: goblin_x, goblin_y: goblin_y});
     connected_users[user_id] = {x: 256, y: 240};
     io.sockets.emit('hero_update', {id: user_id, x: 256, y: 240});
     console.log("User connected to server");
@@ -27,8 +30,15 @@ io.on('connection', function (socket) {
         console.log("Sending hero location updates");
         io.sockets.emit('hero_update', {id: data.id, x: data.x, y: data.y});
     });
+    socket.on('goblin_caught', function() {
+        console.log("Goblin caught by " + user_id + "!");
+        goblins_caught++;
+        goblin_x = 32 + (Math.random() * (canvas.width - 64));
+        goblin_y = 32 + (Math.random() * (canvas.height - 64));
+        io.sockets.emit('reset_goblin', {goblin_x: goblin_x, goblin_y: goblin_y, goblins: goblins_caught});
+    });
     socket.on('disconnect', function() {
         delete connected_users[user_id];
         io.sockets.emit('remove_hero', user_id);
-    })
+    });
 });

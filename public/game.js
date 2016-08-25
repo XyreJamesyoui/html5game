@@ -58,13 +58,9 @@ addEventListener("keyup", function (e) {
 }, false);
 
 // Reset the game when the player catches a monster
-var reset = function () {
-	hero.x = canvas.width / 2;
-	hero.y = canvas.height / 2;
-
-	// Throw the monster somewhere on the screen randomly
-	monster.x = 32 + (Math.random() * (canvas.width - 64));
-	monster.y = 32 + (Math.random() * (canvas.height - 64));
+var goblinCaught = function () {
+    console.log("Caught the goblin!");
+    socket.emit('goblin_caught');
 };
 
 // Update game objects
@@ -97,8 +93,7 @@ var update = function (modifier) {
 		&& hero.y <= (monster.y + 32)
 		&& monster.y <= (hero.y + 32)
 	) {
-		++monstersCaught;
-		reset();
+		goblinCaught();
 	}
 };
 
@@ -116,6 +111,13 @@ socket.on('remove_hero', function(data){
     console.log("Removing user " + data);
     delete other_heroes[data];
     console.log(other_heroes);
+});
+
+socket.on('reset_goblin', function(data){
+    console.log("Resetting goblin");
+    monster.x = data.goblin_x;
+    monster.y = data.goblin_y;
+    monstersCaught = data.goblins;
 });
 
 // Draw everything
@@ -170,9 +172,11 @@ socket.on('client_setup', function(data){
             user_id = data.id;
             console.log(data.id);
             console.log(data.users);
-            other_heroes = data.users
-            then = Date.now();
-            reset();
+            other_heroes = data.users;
+            monstersCaught = data.goblins;
+            then = Date.now()
+            hero.x = canvas.width / 2;
+	        hero.y = canvas.height / 2;
             main();
         }
     }
