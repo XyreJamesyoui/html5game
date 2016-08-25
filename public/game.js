@@ -44,6 +44,8 @@ var monstersCaught = 0;
 
 var other_heroes = {};
 
+var monster_is_caught = false;
+
 var then = null;
 
 // Handle keyboard controls
@@ -60,6 +62,7 @@ addEventListener("keyup", function (e) {
 // Reset the game when the player catches a monster
 var goblinCaught = function () {
     console.log("Caught the goblin!");
+    monster_is_caught = true;
     socket.emit('goblin_caught');
 };
 
@@ -87,14 +90,16 @@ var update = function (modifier) {
 	}
     
     // Are they touching?
-	if (
-		hero.x <= (monster.x + 32)
-		&& monster.x <= (hero.x + 32)
-		&& hero.y <= (monster.y + 32)
-		&& monster.y <= (hero.y + 32)
-	) {
-		goblinCaught();
-	}
+    if(!monster_is_caught){
+	   if (
+		  hero.x <= (monster.x + 32)
+		  && monster.x <= (hero.x + 32)
+		  && hero.y <= (monster.y + 32)
+		  && monster.y <= (hero.y + 32)
+	   ) {
+		  goblinCaught();
+	   }
+    }
 };
 
 socket.on('hero_update', function(data){
@@ -117,6 +122,7 @@ socket.on('reset_goblin', function(data){
     console.log("Resetting goblin");
     monster.x = data.goblin_x;
     monster.y = data.goblin_y;
+    monster_is_caught = false;
     monstersCaught = data.goblins;
 });
 
