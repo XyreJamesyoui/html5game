@@ -48,6 +48,8 @@ var monster_is_caught = false;
 
 var then = null;
 
+var username = null;
+
 // Handle keyboard controls
 var keysDown = {};
 
@@ -143,7 +145,7 @@ var render = function () {
             i++;
             console.log("Drawing hero " + other_hero + " at " + other_heroes[other_hero].x + " " + other_heroes[other_hero].y);
             ctx.drawImage(heroImage, other_heroes[other_hero].x, other_heroes[other_hero].y);
-            ctx.fillText("Users: " + other_hero, 32, 32 * (i+1));
+            ctx.fillText("Users: " + other_hero.username, 32, 32 * (i+1));
         }
         //Use a loop to draw each hero in the other_heroes array
 	}
@@ -185,9 +187,11 @@ socket.on('client_setup', function(data){
             monstersCaught = data.goblins;
             monster.x = data.goblin_x;
             monster.y = data.goblin_y;
-            then = Date.now()
             hero.x = canvas.width / 2;
 	        hero.y = canvas.height / 2;
+            username = prompt("Please input a username:");
+            socket.emit('set_username', username);
+            then = Date.now()
             main();
         }
     }
