@@ -174,6 +174,8 @@ socket.on('client_setup', function(data){
             console.log(data.users);
             other_heroes = data.users;
             monstersCaught = data.goblins;
+            monster.x = data.goblin_x;
+            monster.y = data.goblin_y;
             then = Date.now()
             hero.x = canvas.width / 2;
 	        hero.y = canvas.height / 2;
