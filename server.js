@@ -33,8 +33,8 @@ io.on('connection', function (socket) {
     socket.on('goblin_caught', function() {
         console.log("Goblin caught by " + user_id + "!");
         goblins_caught++;
-        goblin_x = 32 + (Math.random() * (canvas.width - 64));
-        goblin_y = 32 + (Math.random() * (canvas.height - 64));
+        goblin_x = 32 + (Math.random() * (512 - 64));
+        goblin_y = 32 + (Math.random() * (480 - 64));
         io.sockets.emit('reset_goblin', {goblin_x: goblin_x, goblin_y: goblin_y, goblins: goblins_caught});
     });
     socket.on('disconnect', function() {
