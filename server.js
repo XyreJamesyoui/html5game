@@ -14,8 +14,8 @@ app.use(express.static(__dirname + '/public'));
 
 var connected_users = {};
 var goblins_caught = 0;
-var goblin_x = 32 + (Math.random() * (canvas.width - 64));
-var goblin_y = 32 + (Math.random() * (canvas.height - 64));
+var goblin_x = 32 + (Math.random() * (512 - 64));
+var goblin_y = 32 + (Math.random() * (480 - 64));
 
 // Socket.io
 io.on('connection', function (socket) {
