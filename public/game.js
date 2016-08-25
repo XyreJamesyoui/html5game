@@ -128,10 +128,6 @@ socket.on('reset_goblin', function(data){
 
 // Draw everything
 var render = function () {
-    ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "24px Helvetica";
-	ctx.textAlign = "left";
-	ctx.textBaseline = "top";
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0);
 	}
@@ -153,6 +149,10 @@ var render = function () {
 	}
 
 	// Score
+    ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "24px Helvetica";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
 	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
 };
 
