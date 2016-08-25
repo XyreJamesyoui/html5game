@@ -143,7 +143,7 @@ var render = function () {
             i++;
             console.log("Drawing hero " + other_hero + " at " + other_heroes[other_hero].x + " " + other_heroes[other_hero].y);
             ctx.drawImage(heroImage, other_heroes[other_hero].x, other_heroes[other_hero].y);
-            //ctx.fillText("Users: ", 32, 32 * (i+1));
+            //xctx.fillText("Users: ", 32, 32 * (i+1));
         }
         //Use a loop to draw each hero in the other_heroes array
 	}
