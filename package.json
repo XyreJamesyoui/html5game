@@ -1,0 +1,13 @@
+{
+  "name": "html5-test-game-multiplayer",
+  "version": "0.0.0",
+  "description": "A simple multiplayer game",
+  "main": "server.js",
+  "author": "James Sherriff",
+  "private": true,
+  "license": "BSD",
+  "dependencies": {
+    "express": "4.14.0",
+    "socket.io": "1.4.5"
+  }
+}
