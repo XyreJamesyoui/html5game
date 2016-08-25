@@ -108,7 +108,7 @@ socket.on('hero_update', function(data){
     console.log("Updating other heroes");
     if(data.id != user_id){
         console.log(data.x + " " + data.y)
-        other_heroes[data.id] = {x: data.x, y: data.y};
+        other_heroes[data.id] = {username: data.username, x: data.x, y: data.y};
     }
     console.log(other_heroes);
     //Add the hero sent by the server to the array.
