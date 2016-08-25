@@ -128,18 +128,22 @@ socket.on('reset_goblin', function(data){
 
 // Draw everything
 var render = function () {
+    ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "24px Helvetica";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0);
 	}
 
 	if (heroReady) {
 		ctx.drawImage(heroImage, hero.x, hero.y);
-        int i = 0;
+        var i = 0;
         for(other_hero in other_heroes){
             i++;
             console.log("Drawing hero " + other_hero + " at " + other_heroes[other_hero].x + " " + other_heroes[other_hero].y);
             ctx.drawImage(heroImage, other_heroes[other_hero].x, other_heroes[other_hero].y);
-            //xctx.fillText("Users: ", 32, 32 * (i+1));
+            ctx.fillText("Users: " + other_heroes[other_hero].id, 32, 32 * (i+1));
         }
         //Use a loop to draw each hero in the other_heroes array
 	}
@@ -149,10 +153,6 @@ var render = function () {
 	}
 
 	// Score
-    ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "24px Helvetica";
-	ctx.textAlign = "left";
-	ctx.textBaseline = "top";
 	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
 };
 
