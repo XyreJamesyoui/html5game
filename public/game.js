@@ -151,6 +151,7 @@ var render = function () {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
+    ctx.fillText("Users: " + other_heroes);
 };
 
 // The main game loop
