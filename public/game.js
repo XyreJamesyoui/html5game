@@ -53,14 +53,14 @@ var username = null;
 var animator = {
     animations: {},
     addAnimation: function(name, images, timeDelay) {
-        animations[name] = {images: images, timeDelay: timeDelay, currentImage: 0};
+        this.animations[name] = {images: images, timeDelay: timeDelay, currentImage: 0};
     },
     removeAnimation: function(name) {
-        delete animations[name];
+        delete this.animations[name];
     },
     update: function() {
-        for(animation in animations){
-            animations[animation][currentImage]++;
+        for(animation in this.animations){
+            this.animations[animation][currentImage]++;
         }
     }
 };
