@@ -50,6 +50,21 @@ var then = null;
 
 var username = null;
 
+var animator = {
+    animations: {},
+    addAnimation: function(name, images, timeDelay) {
+        animations[name] = {images: images, timeDelay: timeDelay, currentImage: 0};
+    },
+    removeAnimation: function(name) {
+        delete animations[name];
+    },
+    update: function() {
+        for(animation in animations){
+            animations[animation][currentImage]++;
+        }
+    }
+};
+
 // Handle keyboard controls
 var keysDown = {};
 
@@ -62,10 +77,10 @@ addEventListener("keyup", function (e) {
 }, false);
 
 // Reset the game when the player catches a monster
-var goblinCaught = function () {
-    console.log("Caught the goblin!");
+var monsterCaught = function () {
+    console.log("Caught the monster!");
     monster_is_caught = true;
-    socket.emit('goblin_caught');
+    socket.emit('monster_caught');
 };
 
 // Update game objects
@@ -99,9 +114,11 @@ var update = function (modifier) {
 		  && hero.y <= (monster.y + 32)
 		  && monster.y <= (hero.y + 32)
 	   ) {
-		  goblinCaught();
+		  monsterCaught();
 	   }
     }
+    
+    animator.update();
 };
 
 socket.on('hero_update', function(data){
@@ -120,24 +137,29 @@ socket.on('remove_hero', function(data){
     console.log(other_heroes);
 });
 
-socket.on('reset_goblin', function(data){
-    console.log("Resetting goblin");
-    monster.x = data.goblin_x;
-    monster.y = data.goblin_y;
+socket.on('reset_monster', function(data){
+    console.log("Resetting monster");
+    monster.x = data.monster_x;
+    monster.y = data.monster_y;
     monster_is_caught = false;
-    monstersCaught = data.goblins;
+    monstersCaught = data.monsters;
 });
 
 // Draw everything
 var render = function () {
+    //Setup the font to draw text
     ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
+    ctx.font = "24px Helvetica";
+    ctx.fillText("Users:", 32,64);
+    
+    //Draw the game background
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0);
 	}
 
+    //Draw the hero and other heroes
 	if (heroReady) {
 		ctx.drawImage(heroImage, hero.x, hero.y);
         var i = 0;
@@ -150,18 +172,19 @@ var render = function () {
             var box_minus_text = parseInt((32 - text_width)/2);
             console.log(box_minus_text); 
             ctx.fillText(other_heroes[other_hero].username, other_heroes[other_hero].x + box_minus_text, other_heroes[other_hero].y - 20);
+            //Change the font size back to large and draw 
             ctx.font = "24px Helvetica";
-            ctx.fillText("Users: " + other_heroes[other_hero].username, 32, 32 * (i+1));
+            ctx.fillText(other_heroes[other_hero].username, 32, 32 * (i+2));
         }
-        //Use a loop to draw each hero in the other_heroes array
 	}
 
+    //Draw the monster
 	if (monsterReady) {
 		ctx.drawImage(monsterImage, monster.x, monster.y);
 	}
 
 	// Score
-	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
+	ctx.fillText("Monsters caught: " + monstersCaught, 32, 32);
 };
 
 // The main game loop
@@ -190,9 +213,9 @@ socket.on('client_setup', function(data){
             console.log(data.id);
             console.log(data.users);
             other_heroes = data.users;
-            monstersCaught = data.goblins;
-            monster.x = data.goblin_x;
-            monster.y = data.goblin_y;
+            monstersCaught = data.monsters;
+            monster.x = data.monster_x;
+            monster.y = data.monster_y;
             hero.x = canvas.width / 2;
 	        hero.y = canvas.height / 2;
             username = prompt("Please input a username:");
