@@ -120,7 +120,7 @@ var update = function (modifier) {
 	}
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
-        heroDelta.x += hero.speed * mdofier;
+        heroDelta.x += hero.speed * modifier;
         if(heroDelta.x >= 1){
             socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
             heroDelta.x = 0;
