@@ -5,7 +5,7 @@ canvas.width = 512;
 canvas.height = 480;
 document.body.appendChild(canvas);
 
-//Connect to sockets.io
+// Connect to the sockets.io server
 var socket = io();
 var user_id = null;
 
@@ -52,15 +52,23 @@ var username = null;
 
 var animator = {
     animations: {},
+    then: null,
     addAnimation: function(name, images, timeDelay) {
-        this.animations[name] = {images: images, timeDelay: timeDelay, currentImage: 0};
+        this.animations[name] = {images: images, timeDelay: timeDelay, currentImage: 0, timeElapsed: 0};
     },
     removeAnimation: function(name) {
         delete this.animations[name];
     },
     update: function() {
         for(animation in this.animations){
-            this.animations[animation][currentImage]++;
+            var now = Date.now();
+            if(then != null){
+                var delta = now - then;
+                this.animations[animation][timeElapsed] += delta;
+                if(this.animations[animation][timeElapsed] == this.animations[animation][timeDelay]){
+                    this.animations[animation][currentImage]++;
+                } 
+            }
         }
     }
 };
@@ -88,22 +96,18 @@ var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
         socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
-        console.log("Sending this heroes location update");
 	}
 	if (40 in keysDown) { // Player holding down
 		hero.y += hero.speed * modifier;
         socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
-        console.log("Sending this heroes location update");
 	}
 	if (37 in keysDown) { // Player holding left
 		hero.x -= hero.speed * modifier;
         socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
-        console.log("Sending this heroes location update");
 	}
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
         socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
-        console.log("Sending this heroes location update");
 	}
     
     // Are they touching?
@@ -122,23 +126,17 @@ var update = function (modifier) {
 };
 
 socket.on('hero_update', function(data){
-    console.log("Updating other heroes");
     if(data.id != user_id){
-        console.log(data.x + " " + data.y)
         other_heroes[data.id] = {username: data.username, x: data.x, y: data.y};
     }
-    console.log(other_heroes);
     //Add the hero sent by the server to the array.
 });
 
 socket.on('remove_hero', function(data){
-    console.log("Removing user " + data);
     delete other_heroes[data];
-    console.log(other_heroes);
 });
 
 socket.on('reset_monster', function(data){
-    console.log("Resetting monster");
     monster.x = data.monster_x;
     monster.y = data.monster_y;
     monster_is_caught = false;
@@ -162,15 +160,11 @@ var render = function () {
     //Draw the hero and other heroes
 	if (heroReady) {
 		ctx.drawImage(heroImage, hero.x, hero.y);
-        var i = 0;
         for(other_hero in other_heroes){
-            i++;
-            console.log("Drawing hero " + other_hero + " at " + other_heroes[other_hero].x + " " + other_heroes[other_hero].y);
             ctx.drawImage(heroImage, other_heroes[other_hero].x, other_heroes[other_hero].y);
             ctx.font = "10px Helvetica";
             var text_width = ctx.measureText(other_heroes[other_hero].username).width;
-            var box_minus_text = parseInt((32 - text_width)/2);
-            console.log(box_minus_text); 
+            var box_minus_text = parseInt((32 - text_width)/2)
             ctx.fillText(other_heroes[other_hero].username, other_heroes[other_hero].x + box_minus_text, other_heroes[other_hero].y - 20);
             //Change the font size back to large and draw 
             ctx.font = "24px Helvetica";
@@ -210,8 +204,6 @@ socket.on('client_setup', function(data){
     if(user_id == null){
         if(data.id != null){
             user_id = data.id;
-            console.log(data.id);
-            console.log(data.users);
             other_heroes = data.users;
             monstersCaught = data.monsters;
             monster.x = data.monster_x;
