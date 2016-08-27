@@ -93,21 +93,39 @@ var monsterCaught = function () {
 
 // Update game objects
 var update = function (modifier) {
+    heroDelta = {x: 0, y: 0};
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
+        heroDelta.y += hero.speed * modifier;
+        if(heroDelta.y >= 1){
+            socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});  
+            heroDelta.y = 0;
+        }
 	}
 	if (40 in keysDown) { // Player holding down
 		hero.y += hero.speed * modifier;
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
-	}
+        heroDelta.y += hero.speed * modifier;
+        if(heroDelta.y >= 1){
+            socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});  
+            heroDelta.y = 0;
+        }
+    }
 	if (37 in keysDown) { // Player holding left
 		hero.x -= hero.speed * modifier;
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
+        heroDelta.x += hero.speed * modifier;
+        if(heroDelta.x >= 1){
+            socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
+            heroDelta.x = 0;
+        }
 	}
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});    
+        heroDelta.x += hero.speed * mdofier;
+        if(heroDelta.x >= 1){
+            socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
+            heroDelta.x = 0;
+        }
+        
 	}
     
     // Are they touching?
