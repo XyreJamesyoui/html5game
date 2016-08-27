@@ -163,17 +163,17 @@ socket.on('reset_monster', function(data){
 
 // Draw everything
 var render = function () {
+    //Draw the game background
+	if (bgReady) {
+		ctx.drawImage(bgImage, 0, 0);
+	}
+    
     //Setup the font to draw text
     ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
     ctx.font = "24px Helvetica";
     ctx.fillText("Users:", 32,64);
-    
-    //Draw the game background
-	if (bgReady) {
-		ctx.drawImage(bgImage, 0, 0);
-	}
 
     //Draw the hero and other heroes
 	if (heroReady) {
