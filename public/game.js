@@ -160,7 +160,9 @@ var render = function () {
     //Draw the hero and other heroes
 	if (heroReady) {
 		ctx.drawImage(heroImage, hero.x, hero.y);
+        var i = 2;
         for(other_hero in other_heroes){
+            i++
             ctx.drawImage(heroImage, other_heroes[other_hero].x, other_heroes[other_hero].y);
             ctx.font = "10px Helvetica";
             var text_width = ctx.measureText(other_heroes[other_hero].username).width;
@@ -168,7 +170,7 @@ var render = function () {
             ctx.fillText(other_heroes[other_hero].username, other_heroes[other_hero].x + box_minus_text, other_heroes[other_hero].y - 20);
             //Change the font size back to large and draw 
             ctx.font = "24px Helvetica";
-            ctx.fillText(other_heroes[other_hero].username, 32, 32 * (i+2));
+            ctx.fillText(other_heroes[other_hero].username, 32, 32 * (i));
         }
 	}
 
