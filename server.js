@@ -27,13 +27,13 @@ io.on('connection', function (socket) {
         console.log(user_id + "'s username set to " + data);
         username = data;
         connected_users[user_id] = {username: data, x: 256, y: 240};
-        io.sockets.emit('hero_update', {id: user_id, username: username, x: 256, y: 240});
+        socket.broadcast.emit('hero_update', {id: user_id, username: username, x: 256, y: 240});
     });
     socket.on('update_hero', function(data){
         console.log("Recieved a hero update");
         connected_users[user_id] = {username: username, x: data.x, y: data.y};
         console.log("Sending hero location updates");
-        io.sockets.emit('hero_update', {id: user_id, username: username, x: data.x, y: data.y});
+        socket.broadcast.emit('hero_update', {id: user_id, username: username, x: data.x, y: data.y});
     });
     socket.on('monster_caught', function() {
         console.log("Monster caught by " + user_id + "!");
