@@ -127,7 +127,7 @@ var update = function (modifier) {
     elapsedTime += (modifier*1000);
   
     if(heroChanged){
-      if(elapsedTime >= 100){
+      if(elapsedTime >= 50){
         socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
         elapsedTime = 0;
         heroChanged = false;
