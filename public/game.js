@@ -127,8 +127,8 @@ var update = function (modifier) {
     elapsedTime += (modifier*1000);
   
     if(heroChanged){
-      if(elapsedTime >= 50){
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
+      if(elapsedTime >= 20){
+        socket.emit('update_hero', String(hero.x) + ":" + String(hero.y)); 
         elapsedTime = 0;
         heroChanged = false;
       }
@@ -136,9 +136,8 @@ var update = function (modifier) {
 };
 
 socket.on('hero_update', function(data){
-    if(data.id != user_id){
-        other_heroes[data.id] = {username: data.username, x: data.x, y: data.y};
-    }
+    values = data.split(":");
+    other_heroes[values[0]] = {username: values[1], x: values[2], y: values[3]};
     //Add the hero sent by the server to the array.
 });
 
