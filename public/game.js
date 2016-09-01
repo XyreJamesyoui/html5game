@@ -37,18 +37,14 @@ monsterImage.src = "images/monster.png";
 var hero = {
 	speed: 256 // movement in pixels per second
 };
-
 var monster = {};
-
 var monstersCaught = 0;
-
 var other_heroes = {};
-
 var monster_is_caught = false;
-
 var then = null;
-
 var username = null;
+var elapsedTime = 0;
+var heroChanged = false;
 
 var animator = {
     animations: {},
@@ -97,23 +93,22 @@ var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
         hero.y = Math.round(hero.y);
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});  
+        heroChanged = true;
 	}
 	if (40 in keysDown) { // Player holding down
 		hero.y += hero.speed * modifier;
         hero.y = Math.round(hero.y);
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y});  
+        heroChanged = true;
     }
 	if (37 in keysDown) { // Player holding left
 		hero.x -= hero.speed * modifier;
         hero.x = Math.round(hero.x);
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
+        heroChanged = true;
 	}
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
         hero.x = Math.round(hero.x);
-        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
-        
+        heroChanged = true;
 	}
     
     // Are they touching?
@@ -129,6 +124,15 @@ var update = function (modifier) {
     }
     
     animator.update();
+    elapsedTime += (modifier*1000);
+  
+    if(heroChanged){
+      if(elapsedTime >= 30){
+        socket.emit('update_hero', {id: user_id, x: hero.x,y: hero.y}); 
+        elapsedTime = 0;
+        heroChanged = false;
+      }
+    }
 };
 
 socket.on('hero_update', function(data){
